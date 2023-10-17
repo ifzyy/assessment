@@ -93,7 +93,6 @@ class BasicCalculator {
     }
 
     // Reverse valueStack to maintain the correct order
-    console.log(valueStack)
     valueStack = valueStack.reverse();
 
     // Calculate the expression
@@ -175,6 +174,7 @@ equal.addEventListener("click", (e) => {
   }
   displayOne.innerText = displayNumber;
   finalResult.innerText = result;
+  displayNumber = ""
 });
 
 // Event listener for the clear button
@@ -194,8 +194,15 @@ del.addEventListener("click", () => {
 
 // Event listener for the memory plus button
 memoryPlusButton.addEventListener("click", () => {
-  newBasicCalculator.memoryPlus(parseFloat(displayNumber));
-  displayOne.innerText = newBasicCalculator.memory;
+  if(finalResult.innerText.length > 0){
+    console.log("> 0 ooo" + finalResult.innerText)
+    newBasicCalculator.memoryPlus(parseFloat(finalResult.innerText))
+  }
+  else{
+ newBasicCalculator.memoryPlus(parseFloat(displayNumber));
+  }
+ 
+  displayOne.innerText = displayNumber;
 });
 
 // Event listener for the memory recall button
