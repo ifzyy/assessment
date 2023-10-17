@@ -1,3 +1,4 @@
+// Initialize DOM elements
 const displayOne = document.querySelector(".display-1");
 const finalResult = document.querySelector(".result");
 const numberButton = document.querySelectorAll(".number");
@@ -8,16 +9,18 @@ const del = document.querySelector(".delete");
 const memoryPlusButton = document.querySelector(".memory-plus");
 const memoryRecall = document.querySelector(".memory-recall");
 const memoryClearButton = document.querySelector(".memory-clear");
+
+// Initialize variables
 let displayNumber = "";
 let haveDot = false;
 
+// Define the BasicCalculator class
 class BasicCalculator {
   constructor() {
     if (BasicCalculator.instance == null) {
       BasicCalculator.instance = this;
     }
     this._memoryValue = 0; // Initialize _memoryValue
-    this._currentValue = 0;
     return BasicCalculator.instance;
   }
 
@@ -30,12 +33,18 @@ class BasicCalculator {
   get memory() {
     return this._memoryValue;
   }
-memoryRecall(){
-  return this.memory
-}
+
+  // Recall the memory value
+  memoryRecall() {
+    return this.memory;
+  }
+
+  // Clear the memory
   memoryClear() {
     this.memory = 0;
   }
+
+  // Add a value to memory
   memoryPlus(value) {
     if (this.memory === 0) {
       this.memory = value;
@@ -44,27 +53,29 @@ memoryRecall(){
     }
   }
 
+  // Calculate expressions
   calculate(expression) {
-    const operators = ["+", "-", "x", "÷", ".", "%"];
+    const operators = ["+", "-", "x", "÷", "%"];
     const operatorPrecedence = {
       "+": 1,
       "-": 1,
-      x: 2,
+      "x": 2,
       "÷": 2,
-
       "%": 1,
     };
 
+    // Split expression into tokens
     const expressionTokens = expression
       .split(/([\+\-\x÷%])/g)
       .filter((token) => token.trim() !== "");
     const outputQueue = [];
     const operatorQueue = [];
-    let valueQueue = [];
+    let valueStack = [];
 
+    // Process tokens
     expressionTokens.forEach((token) => {
       if (!operators.includes(token)) {
-        valueQueue.push(parseFloat(token));
+        valueStack.push(parseFloat(token));
       } else {
         while (
           operatorQueue.length > 0 &&
@@ -76,21 +87,26 @@ memoryRecall(){
       }
     });
 
+    // Handle remaining operators
     while (operatorQueue.length > 0) {
       outputQueue.push(operatorQueue.shift());
     }
 
-    valueQueue = valueQueue.reverse(); // Reverse to maintain correct order
+    // Reverse valueStack to maintain the correct order
+    console.log(valueStack)
+    valueStack = valueStack.reverse();
+
+    // Calculate the expression
     while (outputQueue.length > 0) {
       const token = outputQueue.shift();
       if (!operators.includes(token)) {
-        valueQueue.push(parseFloat(token));
+        valueStack.push(parseFloat(token));
       } else {
-        if (valueQueue.length < 2) {
+        if (valueStack.length < 2) {
           throw new Error("Invalid expression");
         }
-        const operand2 = valueQueue.shift();
-        const operand1 = valueQueue.shift();
+        const operand2 = valueStack.shift();
+        const operand1 = valueStack.shift();
         let result = null;
         switch (token) {
           case "+":
@@ -114,19 +130,22 @@ memoryRecall(){
           default:
             throw new Error("Invalid operator");
         }
-        valueQueue.unshift(result);
+        valueStack.unshift(result);
       }
     }
 
-    if (valueQueue.length !== 1) {
+    // Ensure there is only one value left in the queue
+    if (valueStack.length !== 1) {
       throw new Error("Invalid expression");
     }
-    return valueQueue[0];
+    return valueStack[0];
   }
 }
 
+// Create a new instance of BasicCalculator
 const newBasicCalculator = new BasicCalculator();
 
+// Event listeners for number buttons
 numberButton.forEach((button) => {
   button.addEventListener("click", (e) => {
     if (e.target.innerText === "." && !haveDot) {
@@ -139,7 +158,7 @@ numberButton.forEach((button) => {
   });
 });
 
-
+// Event listeners for operator buttons
 opeRator.forEach((operation) => {
   operation.addEventListener("click", (e) => {
     haveDot = false;
@@ -148,6 +167,7 @@ opeRator.forEach((operation) => {
   });
 });
 
+// Event listener for the equal button
 equal.addEventListener("click", (e) => {
   let result = newBasicCalculator.calculate(displayNumber);
   if (result.toString().includes(".")) {
@@ -157,6 +177,7 @@ equal.addEventListener("click", (e) => {
   finalResult.innerText = result;
 });
 
+// Event listener for the clear button
 clear.addEventListener("click", () => {
   displayOne.innerText = "";
   finalResult.innerText = "";
@@ -164,22 +185,26 @@ clear.addEventListener("click", () => {
   haveDot = false;
 });
 
+// Event listener for the delete button
 del.addEventListener("click", () => {
   displayNumber = displayNumber.toString().slice(0, -1);
   displayOne.innerText = displayNumber;
   finalResult.innerText = "";
 });
 
+// Event listener for the memory plus button
 memoryPlusButton.addEventListener("click", () => {
   newBasicCalculator.memoryPlus(parseFloat(displayNumber));
   displayOne.innerText = newBasicCalculator.memory;
 });
 
+// Event listener for the memory recall button
 memoryRecall.addEventListener("click", () => {
-let memVal = newBasicCalculator.memoryRecall()
-displayOne.innerText = memVal
+  let memVal = newBasicCalculator.memoryRecall();
+  displayOne.innerText = memVal;
 });
 
+// Event listener for the memory clear button
 memoryClearButton.addEventListener("click", () => {
   newBasicCalculator.memoryClear();
   displayOne.innerText = "";
@@ -187,28 +212,27 @@ memoryClearButton.addEventListener("click", () => {
   displayNumber = "";
 });
 
-//Add keyboard functionality
-const numKeys =(key) => {
+//Add keyboard accesibility
+const numKeys = (key) => {
   numberButton.forEach((button) => {
     if (button.innerText === key) {
       button.click();
     }
   });
-}
+};
 const operationKeys = (key) => {
   opeRator.forEach((operation) => {
     if (operation.innerText === key) {
       operation.click();
     }
   });
-}
-const clickEqual =() => {
+};
+const clickEqual = () => {
   equal.click();
-}
-const clickDel =()=> {
+};
+const clickDel = () => {
   del.click();
-}
-
+};
 
 window.addEventListener("keydown", (e) => {
   if (
@@ -237,3 +261,6 @@ window.addEventListener("keydown", (e) => {
     clickDel();
   }
 });
+
+
+
