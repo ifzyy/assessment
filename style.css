@@ -1,0 +1,90 @@
+body {
+  background-color: #60605f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contain {
+  max-height: fit-content;
+}
+h1 {
+  text-align: center;
+}
+.container {
+  margin: 10vh auto 0 auto;
+  background-color: black;
+  color: white;
+  padding: 15px;
+  border-radius: 19px;
+  width: 300px;
+}
+#modulo{
+  color: white;
+}
+#special{
+  color: #0070ff;
+}
+#display {
+  text-align: right;
+  height: 100px;
+  border-top: 2px solid lightgray;
+  border-bottom: 2px solid lightgray;
+  padding: 16px 8px;
+  font-size: 25px;
+  background: #212121;
+}
+
+.buttons {
+  display: grid;
+  border-color: transparent;
+  border-bottom: 1px;
+  border-left: 1px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.buttons > div {
+  border-top: 1px;
+  border-right: 1px;
+}
+
+.button {
+  border: 0.5px;
+  line-height: 70px;
+  text-align: center;
+  font-size: 25px;
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+#equal {
+  background-color: #0070ff;
+  color: white;
+  padding: 0;
+  border-radius: 500000%;
+}
+
+.button:hover {
+  background-color: #323330;
+  color: white;
+  transition: 0.5s ease-in-out;
+}
+.display-1 {
+  padding-bottom: 10px;
+  font-size: 35px;
+  color: white;
+}
+
+.result {
+  text-align: right;
+  opacity: 0.4;
+}
+.memory-clear,
+.memory-plus,
+.memory-recall,
+.memory-subtract,
+.clear,
+.delete,
+.operator {
+  color: rgba(0, 115, 255, 0.95);
+}
